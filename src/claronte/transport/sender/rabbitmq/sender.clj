@@ -10,6 +10,7 @@
   Sender
 
   (publish [this message]
+    "Send messages to RabbitMQ. The exchange must exist."
     (try
       (let [conn (rmq/connect rabbitmq-server-connection-parameters)
             ch (lch/open conn)]
@@ -21,6 +22,5 @@
       (catch Exception e
         (println (str "caught exception: " (.getMessage e)))
         ))
-
-    "Send messages to RabbitMQ. The exchange have to exist.")
+    )
   )
