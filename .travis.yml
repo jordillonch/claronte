@@ -8,3 +8,6 @@ matrix:
   allow_failures:
     - oraclejdk7
     - oraclejdk8
+services:
+  - redis-server
+  - rabbitmq
