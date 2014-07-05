@@ -5,8 +5,11 @@
             ))
 
 (defn test-unit-of-work [worker-num subworker-num control-stop-atom]
-  ;(Thread/sleep (rand-int 10))
   ;(println "w" worker-num "- s" subworker-num)
+  (while (not (deref control-stop-atom))
+    ; do nothing
+    )
+  (str worker-num "-" subworker-num)
   )
 
 (deftest pool-of-workers-test
