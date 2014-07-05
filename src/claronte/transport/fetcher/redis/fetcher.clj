@@ -2,7 +2,7 @@
   (:require [taoensso.carmine :as car :refer (wcar)]
             [claronte.transport.fetcher.fetcher-protocol :refer :all]))
 
-(deftype RedisFetcher [redis-server-connection-parameters source-key backup-key]
+(deftype RedisFetcher [id redis-server-connection-parameters source-key backup-key]
   Fetcher
 
   (fetch-one-message [this]

@@ -1,26 +1,23 @@
 (ns claronte.transport.sender.rabbitmq.sender
   (:require [claronte.transport.sender.sender-protocol :refer :all]
             [clojure.tools.logging :as log]
-            [langohr.core :as rmq]
-            [langohr.channel :as lch]
             [langohr.basic :as lb]
-            [langohr.exchange :as le]))
+            [langohr.confirm :as lcf]
+            )
+  (:import
+    com.novemberain.langohr.Channel
+    )
+  )
 
-(deftype RabbitMqSender [rabbitmq-server-connection-parameters exchange-name routing-key]
+(deftype RabbitMqSender [id ^Channel channel exchange-name routing-key]
   Sender
 
   (publish [this message]
     "Send messages to RabbitMQ. The exchange must exist."
     (try
-      (let [conn (rmq/connect rabbitmq-server-connection-parameters)
-            ch (lch/open conn)]
-        (log/debug (format "[main] Connected. Channel id: %d" (.getChannelNumber ch)))
-        (lb/publish ch exchange-name routing-key message :content-type "text/plain")
-        (log/debug "[main] Disconnecting...")
-        (rmq/close ch)
-        (rmq/close conn))
+      (lb/publish channel exchange-name routing-key message :content-type "text/plain")
       (catch Exception e
-        (println (str "caught exception: " (.getMessage e)))
+             (println "caught exception: " (.getMessage e))
         ))
     )
   )

@@ -8,13 +8,14 @@
   (testing
       (let [redis-server-connection-parameters fetcher-redis-server-connection-parameters
 
+            id 1
             source-key "claronte:test:source"
             backup-key "claronte:test:backup"
             message "foo"
 
             _ (car/wcar redis-server-connection-parameters (car/rpush source-key message))
 
-            redis-fetcher (->RedisFetcher redis-server-connection-parameters source-key backup-key)
+            redis-fetcher (->RedisFetcher id redis-server-connection-parameters source-key backup-key)
 
             ; fetch message
             message-fetched (.fetch-one-message redis-fetcher)
@@ -38,13 +39,14 @@
   (testing
       (let [redis-server-connection-parameters fetcher-redis-server-connection-parameters
 
+            id 1
             source-key "claronte:test:source"
             backup-key "claronte:test:backup"
             message "bar"
 
             _ (car/wcar redis-server-connection-parameters (car/rpush source-key message))
 
-            redis-fetcher (->RedisFetcher redis-server-connection-parameters source-key backup-key)
+            redis-fetcher (->RedisFetcher id redis-server-connection-parameters source-key backup-key)
 
             ; fetch message
             message-fetched (.fetch-one-message redis-fetcher)
