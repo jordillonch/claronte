@@ -17,7 +17,7 @@
   (testing
       (let [number-of-workers 4
             number-of-subworkers 10
-            control-stop (atom false)
+            init-data {:stop-worker-atom (atom false)}
 
             ; create channel
             connection (create-connection-rabbitmq sender-rabbitmq-server-connection-parameters)
@@ -25,10 +25,10 @@
             ; create the exchange
             _ (le/declare channel "claronte" "direct")
 
-            pool-of-workers-result (transport-redis-to-rabbitmq number-of-workers number-of-subworkers control-stop)
+            pool-of-workers-result (transport-redis-to-rabbitmq number-of-workers number-of-subworkers init-data)
             ]
         (Thread/sleep 1000) ; add more time in order to see how many messages per second are being published
-        (reset! control-stop true)
+        (reset! (init-data :stop-worker-atom) true)
 
         ;(prn pool-of-workers-result)
 

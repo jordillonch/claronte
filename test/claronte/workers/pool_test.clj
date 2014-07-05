@@ -4,9 +4,9 @@
             [clojure.core.async :as async :refer [go <!!]]
             ))
 
-(defn test-unit-of-work [worker-num subworker-num control-stop-atom]
+(defn test-unit-of-work [worker-num subworker-num init-data]
   ;(println "w" worker-num "- s" subworker-num)
-  (while (not (deref control-stop-atom))
+  (while (not (deref (init-data :stop-worker-atom)))
     ; do nothing
     )
   (str worker-num "-" subworker-num)
@@ -16,11 +16,11 @@
   (testing
       (let [number-of-workers 4
             number-of-subworkers 10
-            control-stop (atom false)
-            pool-of-workers-result (pool-of-workers number-of-workers number-of-subworkers test-unit-of-work control-stop)
+            init-data {:stop-worker-atom (atom false)}
+            pool-of-workers-result (pool-of-workers number-of-workers number-of-subworkers test-unit-of-work init-data)
             ]
         ;(Thread/sleep 500)
-        (reset! control-stop true)
+        (reset! (init-data :stop-worker-atom) true)
         ;(println "stop!")
         ;(Thread/sleep 100)
         (let [result (flatten
