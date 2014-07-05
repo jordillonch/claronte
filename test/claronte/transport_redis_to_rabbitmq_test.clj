@@ -1,9 +1,9 @@
-(ns claronte.transport-redis2rabbitmq-test
+(ns claronte.transport-redis-to-rabbitmq-test
   (:require
     [clojure.test :refer :all]
     [claronte.config.claronte-config :refer :all]
     [claronte.transport.sender.rabbitmq.connection-factory :refer :all]
-    [claronte.transport-redis2rabbitmq :refer :all]
+    [claronte.transport-redis-to-rabbitmq :refer :all]
     [clojure.core.async :as async :refer [<!!]]
     [langohr.core :as rmq]
     [langohr.channel :as lch]
@@ -13,7 +13,7 @@
     )
   )
 
-(deftest transport-redis2rabbitmq-test
+(deftest transport-redis-to-rabbitmq-test
   (testing
       (let [number-of-workers 4
             number-of-subworkers 10
@@ -25,7 +25,7 @@
             ; create the exchange
             _ (le/declare channel "claronte" "direct")
 
-            pool-of-workers-result (transport-redis2rabbitmq number-of-workers number-of-subworkers control-stop)
+            pool-of-workers-result (transport-redis-to-rabbitmq number-of-workers number-of-subworkers control-stop)
             ]
         (Thread/sleep 1000) ; add more time in order to see how many messages per second are being published
         (reset! control-stop true)

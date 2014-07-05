@@ -1,4 +1,4 @@
-(ns claronte.transport-redis2rabbitmq
+(ns claronte.transport-redis-to-rabbitmq
   (:require
     [claronte.workers.pool :refer :all]
     [claronte.config.claronte-config :refer :all]
@@ -9,7 +9,7 @@
     )
   )
 
-(defn- transport-redis2rabbitmq-generic [id redis-source-key redis-backup-key rabbitmq-exchange-name rabbitmq-routing-key control-stop-atom]
+(defn- transport-redis-to-rabbitmq-generic [id redis-source-key redis-backup-key rabbitmq-exchange-name rabbitmq-routing-key control-stop-atom]
   (let [
          fetcher (->RedisFetcher id fetcher-redis-server-connection-parameters redis-source-key redis-backup-key)
 
@@ -23,18 +23,17 @@
     )
   )
 
-(defn- transport-unit-of-work [worker-num subworker-num]
+(defn- transport-unit-of-work [worker-num subworker-num control-stop-atom]
   (let [redis-source-key "claronte"
         redis-backup-key (str "claronte-backup-" worker-num "-" subworker-num)
         rabbitmq-exchange-name "claronte"
         rabbitmq-routing-key ""
-        control-stop-transport (atom false) ; todo: refactor
         id (+ (* worker-num 1000) subworker-num)
         ]
-    (transport-redis2rabbitmq-generic id redis-source-key redis-backup-key rabbitmq-exchange-name rabbitmq-routing-key control-stop-transport)
+    (transport-redis-to-rabbitmq-generic id redis-source-key redis-backup-key rabbitmq-exchange-name rabbitmq-routing-key control-stop-atom)
     )
   )
 
-(defn transport-redis2rabbitmq [number-of-workers number-of-subworkers control-stop-atom]
+(defn transport-redis-to-rabbitmq [number-of-workers number-of-subworkers control-stop-atom]
   (pool-of-workers number-of-workers number-of-subworkers transport-unit-of-work control-stop-atom)
   )

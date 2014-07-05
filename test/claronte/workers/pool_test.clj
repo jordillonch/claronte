@@ -4,7 +4,7 @@
             [clojure.core.async :as async :refer [go <!!]]
             ))
 
-(defn test-unit-of-work [worker-num subworker-num]
+(defn test-unit-of-work [worker-num subworker-num control-stop-atom]
   ;(Thread/sleep (rand-int 10))
   ;(println "w" worker-num "- s" subworker-num)
   )

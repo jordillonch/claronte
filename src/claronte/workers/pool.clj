@@ -6,7 +6,7 @@
   (doall
     (for [subworker-num (range number-of-subworkers)]
       (go (while (not (deref control-stop-atom))
-            (unit-of-work worker-num subworker-num)
+            (unit-of-work worker-num subworker-num control-stop-atom)
             )
           (str worker-num "-" subworker-num))
       )
