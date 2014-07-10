@@ -3,6 +3,7 @@
     [clojure.tools.logging :as log]
     [langohr.core :as rmq]
     [langohr.channel :as lch]
+    [langohr.confirm :as lcf]
     )
   (:import
     com.novemberain.langohr.Connection
@@ -15,12 +16,9 @@
   )
 
 (defn ^Channel open-channel-rabbitmq [^Connection conn]
-  (lch/open conn)
-  ;ch (lch/open conn id)
-  ;ch   (rmq/create-channel conn id)
-  ;(log/debug (format "[main] Connected. Channel id: %d" (.getChannelNumber ch)))
-  )
 
-;(rmq/close ch)
-;(rmq/close conn)
-;(log/debug "[main] Disconnecting...")
+  (let [channel (lch/open conn)]
+    (lcf/select channel)
+    channel
+    )
+  )

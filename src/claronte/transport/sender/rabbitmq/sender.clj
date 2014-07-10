@@ -13,9 +13,10 @@
   Sender
 
   (publish [this message]
-    "Send messages to RabbitMQ. The exchange must exist."
+    "Send messages to RabbitMQ. The exchange it should exist."
     (try
       (lb/publish channel exchange-name routing-key message :content-type "text/plain")
+      (.waitForConfirms channel)
       (catch Exception e
              (println "caught exception: " (.getMessage e))
         ))
